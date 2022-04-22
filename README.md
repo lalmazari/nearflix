@@ -1,129 +1,36 @@
-# `near-sdk-as` Starter Kit
+# NEARFLIX
+Simple Decentralize User Authorization App, it checks if User Exists it gives access to main page if not so it not allowed to login, and also gets NEAR Token to create account if no NEAR Token not allowed to create account.
 
-This is a good project to use as a starting point for your AssemblyScript project.
+## Requirments
+- Install Node.js 
+- Install Yarn `npm install --global yarn` OR `npm i -g yarn`
+- Install NEAR CLI `npm install --global near-cli`
+- Get NEAR testnet wallet. [NEAR TESTNET WALLET](https://wallet.testnet.near.org/)
 
-## Samples
-
-This repository includes a complete project structure for AssemblyScript contracts targeting the NEAR platform.
-
-The example here is very basic.  It's a simple contract demonstrating the following concepts:
-- a single contract
-- the difference between `view` vs. `change` methods
-- basic contract storage
-
-There are 2 AssemblyScript contracts in this project, each in their own folder:
-
-- **simple** in the `src/simple` folder
-- **singleton** in the `src/singleton` folder
-
-### Simple
-
-We say that an AssemblyScript contract is written in the "simple style" when the `index.ts` file (the contract entry point) includes a series of exported functions.
-
-In this case, all exported functions become public contract methods.
-
-```ts
-// return the string 'hello world'
-export function helloWorld(): string {}
-
-// read the given key from account (contract) storage
-export function read(key: string): string {}
-
-// write the given value at the given key to account (contract) storage
-export function write(key: string, value: string): string {}
-
-// private helper method used by read() and write() above
-private storageReport(): string {}
-```
-
-### Singleton
-
-We say that an AssemblyScript contract is written in the "singleton style" when the `index.ts` file (the contract entry point) has a single exported class (the name of the class doesn't matter) that is decorated with `@nearBindgen`.
-
-In this case, all methods on the class become public contract methods unless marked `private`.  Also, all instance variables are stored as a serialized instance of the class under a special storage key named `STATE`.  AssemblyScript uses JSON for storage serialization (as opposed to Rust contracts which use a custom binary serialization format called borsh).
-
-```ts
-@nearBindgen
-export class Contract {
-
-  // return the string 'hello world'
-  helloWorld(): string {}
-
-  // read the given key from account (contract) storage
-  read(key: string): string {}
-
-  // write the given value at the given key to account (contract) storage
-  @mutateState()
-  write(key: string, value: string): string {}
-
-  // private helper method used by read() and write() above
-  private storageReport(): string {}
-}
-```
-
+## Deploy
+To Deploy your project you have to login to NEAR Testnet Account, Run codes in Terminal.
+- Run `near login`, and follow the instructions it gives you.
+- Add this code in package.json file under "scripts:" to make eaasy Build & Deploy  `"deploy": "yarn build:release && near dev-deploy ./build/release/simple.wasm"`
+- Set variable dev-id to CONTRACT.`export CONTRACT=dev###-###` & `echo $CONTRACT`
 
 ## Usage
 
-### Getting started
+- Try to create User account without --amount and with no name.
+`near call $CONTRACT newUser '{"name":""}' --accountId <'YOUR-TESTNET-NAME'> --amount 1` // Errorr no name
+`near call $CONTRACT newUser '{"name":"lal"}' --accountId <'YOUR-TESTNET-NAME'>` // Errorr no amount attached
+`near call $CONTRACT newUser '{"name":"lal"}' --accountId <'YOUR-TESTNET-NAME'> --amount 1` //Success
 
-(see below for video recordings of each of the following steps)
+-View All Users.
+`near view $CONTRACT usersList`
 
-INSTALL `NEAR CLI` first like this: `npm i -g near-cli`
+- Login with User Id
+`near call $CONTRACT userLogin '{"userId":###}' --accountId <'YOUR-TESTNET-NAME'>`
+`near call $CONTRACT userLogin '{"userId":###1}' --accountId <'YOUR-TESTNET-NAME'>` // wrong User Id it gives errorr to login
 
-1. clone this repo to a local folder
-2. run `yarn`
-3. run `./scripts/1.dev-deploy.sh`
-3. run `./scripts/2.use-contract.sh`
-4. run `./scripts/2.use-contract.sh` (yes, run it to see changes)
-5. run `./scripts/3.cleanup.sh`
+- Delete User
+`near call $CONTRACT deleteUser '{"userId":##}' --accountId l<'YOUR-TESTNET-NAME'>`
+`near call $CONTRACT userLogin '{"userId":##}' --accountId <'YOUR-TESTNET-NAME'>` // Test if User can Login
 
-### Videos
-
-**`1.dev-deploy.sh`**
-
-This video shows the build and deployment of the contract.
-
-[![asciicast](https://asciinema.org/a/409575.svg)](https://asciinema.org/a/409575)
-
-**`2.use-contract.sh`**
-
-This video shows contract methods being called.  You should run the script twice to see the effect it has on contract state.
-
-[![asciicast](https://asciinema.org/a/409577.svg)](https://asciinema.org/a/409577)
-
-**`3.cleanup.sh`**
-
-This video shows the cleanup script running.  Make sure you add the `BENEFICIARY` environment variable. The script will remind you if you forget.
-
-```sh
-export BENEFICIARY=<your-account-here>   # this account receives contract account balance
-```
-
-[![asciicast](https://asciinema.org/a/409580.svg)](https://asciinema.org/a/409580)
-
-### Other documentation
-
-- See `./scripts/README.md` for documentation about the scripts
-- Watch this video where Willem Wyndham walks us through refactoring a simple example of a NEAR smart contract written in AssemblyScript
-
-  https://youtu.be/QP7aveSqRPo
-
-  ```
-  There are 2 "styles" of implementing AssemblyScript NEAR contracts:
-  - the contract interface can either be a collection of exported functions
-  - or the contract interface can be the methods of a an exported class
-
-  We call the second style "Singleton" because there is only one instance of the class which is serialized to the blockchain storage.  Rust contracts written for NEAR do this by default with the contract struct.
-
-   0:00 noise (to cut)
-   0:10 Welcome
-   0:59 Create project starting with "npm init"
-   2:20 Customize the project for AssemblyScript development
-   9:25 Import the Counter example and get unit tests passing
-  18:30 Adapt the Counter example to a Singleton style contract
-  21:49 Refactoring unit tests to access the new methods
-  24:45 Review and summary
-  ```
 
 ## The file system
 
@@ -156,15 +63,4 @@ export BENEFICIARY=<your-account-here>   # this account receives contract accoun
 │   ├── tsconfig.json                  # Typescript configuration
 │   └── utils.ts                       # common contract utility functions
 └── yarn.lock                          # project manifest version lock
-```
-
-You may clone this repo to get started OR create everything from scratch.
-
-Please note that, in order to create the AssemblyScript and tests folder structure, you may use the command `asp --init` which will create the following folders and files:
-
-```
-./assembly/
-./assembly/tests/
-./assembly/tests/example.spec.ts
-./assembly/tests/as-pect.d.ts
 ```

@@ -1,26 +1,22 @@
-import { storage, Context } from "near-sdk-as"
 
-// return the string 'hello world'
-export function helloWorld(): string {
-  return 'hello world'
+import { User } from "./model";
+
+// Create a new User
+export function newUser(name: string): string {
+  return User.createUser(name);
 }
 
-// read the given key from account (contract) storage
-export function read(key: string): string {
-  if (storage.hasKey(key)) {
-    return `✅ Key [ ${key} ] has value [ ${storage.getString(key)!} ]`
-  } else {
-    return `🚫 Key [ ${key} ] not found in storage. ( ${storageReport()} )`
-  }
+// View All Users
+export function usersList():User[] {
+    return User.usersList();
 }
 
-// write the given value at the given key to account (contract) storage
-export function write(key: string, value: string): string {
-  storage.set(key, value)
-  return `✅ Data saved. ( ${storageReport()} )`
+// User Login
+export function userLogin(userId: u32): string{
+    return User.loginUser(userId);
 }
 
-// private helper method used by read() and write() above
-function storageReport(): string {
-  return `storage [ ${Context.storageUsage} bytes ]`
+// // Delete User 
+export function deleteUser(userId: u32): string {
+    return User.deleteUser(userId)
 }
