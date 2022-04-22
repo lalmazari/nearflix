@@ -20,7 +20,7 @@ To Deploy your project you have to login to NEAR Testnet Account, Run codes in T
 `near call $CONTRACT newUser '{"name":"lal"}' --accountId <'YOUR-TESTNET-NAME'>` // Errorr no amount attached
 `near call $CONTRACT newUser '{"name":"lal"}' --accountId <'YOUR-TESTNET-NAME'> --amount 1` //Success
 
--View All Users.
+- View All Users.
 `near view $CONTRACT usersList`
 
 - Login with User Id
