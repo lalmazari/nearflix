@@ -64,3 +64,7 @@ To Deploy your project you have to login to NEAR Testnet Account, Run codes in T
 │   └── utils.ts                       # common contract utility functions
 └── yarn.lock                          # project manifest version lock
 ```
+
+## Loom Video Link
+- [Loom Video Part I](https://www.loom.com/share/0d361fff8a9f4a378b143abdaafb3ad3)
+- [Loom Video Part II](https://www.loom.com/share/e49443543af64dd493c6f0129f79c9fb)
